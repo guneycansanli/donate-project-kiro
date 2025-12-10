@@ -1,0 +1,182 @@
+version: '3.8'
+
+services:
+  # Production service
+  donation-website:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: donation-website-prod
+    ports:
+      - '${EXTERNAL_PORT:-3000}:${PORT:-3000}'
+    environment:
+      # Application configuration
+      - NODE_ENV=production
+      - PORT=${PORT:-3000}
+      
+      # Email service configuration
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SECURE=${SMTP_SECURE:-false}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - FROM_EMAIL=${FROM_EMAIL:-noreply@givegreenliveclean.org}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@givegreenliveclean.org}
+      - DEFAULT_RECEIPT_EMAIL=${DEFAULT_RECEIPT_EMAIL:-donor@example.com}
+      
+      # PayPal configuration
+      - PAYPAL_BUSINESS_ID=${PAYPAL_BUSINESS_ID:-73PLJSAMMTSCW}
+      - PAYPAL_ENVIRONMENT=${PAYPAL_ENVIRONMENT:-production}
+      
+      # Security and performance
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - RATE_LIMIT_WINDOW=${RATE_LIMIT_WINDOW:-900000}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-100}
+      
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FORMAT=${LOG_FORMAT:-combined}
+    volumes:
+      # Configuration files (read-write for dynamic updates)
+      - ./config:/app/config:rw
+      
+      # Persistent data storage
+      - donation-logs:/app/logs
+      - donation-data:/app/data
+      
+      # Optional: Custom SSL certificates
+      - ${SSL_CERT_PATH:-./certs}:/app/certs:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'node', 'healthcheck.js']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - donation-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.donation-website.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.services.donation-website.loadbalancer.server.port=${PORT:-3000}"
+
+  # Development service
+  donation-website-dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: donation-website-dev
+    ports:
+      - '${DEV_EXTERNAL_PORT:-3001}:${PORT:-3000}'
+    environment:
+      # Application configuration
+      - NODE_ENV=development
+      - PORT=${PORT:-3000}
+      
+      # Development-specific settings
+      - DEBUG=${DEBUG:-*}
+      - WATCH_FILES=${WATCH_FILES:-true}
+      
+      # Email service configuration (same as production)
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SECURE=${SMTP_SECURE:-false}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - FROM_EMAIL=${FROM_EMAIL:-noreply@givegreenliveclean.org}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@givegreenliveclean.org}
+      - DEFAULT_RECEIPT_EMAIL=${DEFAULT_RECEIPT_EMAIL:-donor@example.com}
+      
+      # PayPal configuration (sandbox for development)
+      - PAYPAL_BUSINESS_ID=${PAYPAL_BUSINESS_ID:-73PLJSAMMTSCW}
+      - PAYPAL_ENVIRONMENT=${PAYPAL_ENVIRONMENT:-sandbox}
+      
+      # Development security (more permissive)
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - RATE_LIMIT_WINDOW=${RATE_LIMIT_WINDOW:-60000}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-1000}
+      
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
+      - LOG_FORMAT=${LOG_FORMAT:-dev}
+    volumes:
+      # Configuration files (read-write for dynamic updates)
+      - ./config:/app/config:rw
+      
+      # Source code mounting for hot reload
+      - ./frontend:/app/frontend:rw
+      - ./backend:/app/backend:rw
+      - ./tests:/app/tests:rw
+      
+      # Persistent data storage
+      - donation-dev-logs:/app/logs
+      - donation-dev-data:/app/data
+      
+      # Node modules cache for faster rebuilds
+      - donation-dev-node-modules:/app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'node', 'healthcheck.js']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - donation-network
+    profiles:
+      - dev
+
+  # Load balancer for horizontal scaling (production)
+  nginx-lb:
+    image: nginx:alpine
+    container_name: donation-nginx-lb
+    ports:
+      - '${LB_PORT:-80}:80'
+      - '${LB_SSL_PORT:-443}:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ${SSL_CERT_PATH:-./certs}:/etc/nginx/certs:ro
+    depends_on:
+      - donation-website
+    restart: unless-stopped
+    networks:
+      - donation-network
+    profiles:
+      - production
+      - scaling
+
+  # Additional application instances for horizontal scaling
+  donation-website-2:
+    extends: donation-website
+    container_name: donation-website-2
+    ports:
+      - '${EXTERNAL_PORT_2:-3002}:${PORT:-3000}'
+    profiles:
+      - scaling
+
+  donation-website-3:
+    extends: donation-website
+    container_name: donation-website-3
+    ports:
+      - '${EXTERNAL_PORT_3:-3003}:${PORT:-3000}'
+    profiles:
+      - scaling
+
+# Named volumes for data persistence
+volumes:
+  donation-logs:
+    driver: local
+  donation-data:
+    driver: local
+  donation-dev-logs:
+    driver: local
+  donation-dev-data:
+    driver: local
+  donation-dev-node-modules:
+    driver: local
+
+# Network for service communication
+networks:
+  donation-network:
+    driver: bridge

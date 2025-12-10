@@ -1,0 +1,26 @@
+site:
+  title: 'Give Green, Live Clean'
+  tagline: 'Your Donation Plants a Forest. Give Green, Live Clean.'
+  description: 'Join our mission to reforest the planet. Every dollar you give helps us plant trees, restore ecosystems, and build a healthier world for tomorrow.'
+
+tabs:
+  home:
+    title: 'Home'
+    content: 'Welcome to our environmental mission...'
+
+  about:
+    title: 'About Us'
+    content: 'Learn about our organization...'
+
+  impact:
+    title: 'Our Impact'
+    content: 'See how donations make a difference...'
+
+  donate:
+    title: 'Donate'
+    content: 'Support our cause today...'
+
+paypal:
+  business_id: '73PLJSAMMTSCW'
+  currency: 'USD'
+  amounts: [10, 25, 50, 100, 250]

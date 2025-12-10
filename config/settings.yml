@@ -1,0 +1,31 @@
+app:
+  name: 'Give Green Live Clean'
+  version: '1.0.0'
+  environment: 'production'
+
+ui:
+  theme:
+    primary_color: '#0df20d'
+    background_light: '#f5f8f5'
+    background_dark: '#102210'
+
+  responsive:
+    mobile_breakpoint: '768px'
+    tablet_breakpoint: '1024px'
+
+api:
+  poll_interval: 30000 # milliseconds
+  timeout: 5000
+  retry_attempts: 3
+
+images:
+  lazy_load_threshold: 100 # pixels before viewport
+  retry_attempts: 3
+  retry_delay: 1000 # milliseconds
+  supported_formats: ['webp', 'avif', 'jpg', 'jpeg', 'png', 'gif']
+  breakpoints:
+    mobile: 480
+    tablet: 768
+    desktop: 1024
+    large: 1440
+  fallback_image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIE5vdCBBdmFpbGFibGU8L3RleHQ+PC9zdmc+'

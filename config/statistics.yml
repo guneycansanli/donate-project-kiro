@@ -1,0 +1,21 @@
+statistics:
+  trees_planted:
+    value: 150000
+    label: 'Trees Planted'
+    icon: 'park'
+    format: 'number_with_suffix'
+
+  hectares_restored:
+    value: 75
+    label: 'Hectares Restored'
+    icon: 'landscape'
+    format: 'number_with_plus'
+
+  global_impact:
+    value: 'Worldwide'
+    label: 'Global Impact'
+    icon: 'public'
+    format: 'text'
+
+update_frequency: 30 # seconds
+last_updated: '2024-12-09T10:00:00Z'

@@ -17,9 +17,9 @@
     "build": "npm run lint && npm run test:unit",
     "test:unit": "jest backend/config/configManager.test.js backend/server.test.js",
     "docker:build": "docker build -t give-green-live-clean .",
-    "docker:run": "docker-compose up",
-    "docker:dev": "docker-compose --profile dev up",
-    "docker:stop": "docker-compose down"
+    "docker:run": "docker compose up",
+    "docker:dev": "docker compose --profile dev up",
+    "docker:stop": "docker compose down"
   },
   "keywords": [
     "donation",

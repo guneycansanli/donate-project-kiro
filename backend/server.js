@@ -59,7 +59,7 @@ app.get('/api/config/test', (req, res) => {
         windowMs: parseInt(process.env.RATE_LIMIT_WINDOW) || 900000
       }
     }
-    
+
     res.json(testConfig)
   } catch (error) {
     console.error('Error in test config endpoint:', error)
@@ -90,7 +90,7 @@ app.get('/api/config/:name', (req, res) => {
   try {
     const { name } = req.params
     const config = configManager.getConfig(name)
-    
+
     if (!config || Object.keys(config).length === 0) {
       return res.status(404).json({
         success: false,
@@ -98,7 +98,7 @@ app.get('/api/config/:name', (req, res) => {
         timestamp: new Date().toISOString()
       })
     }
-    
+
     res.json({
       success: true,
       data: config,
@@ -174,9 +174,9 @@ app.get('/api/settings', (req, res) => {
 // Statistics increment endpoint for donation tracking
 app.post('/api/statistics/increment', (req, res) => {
   try {
-    const { donation_amount, increments } = req.body
-    
-    if (!donation_amount || donation_amount <= 0) {
+    const { donation_amount: donationAmount, increments } = req.body
+
+    if (!donationAmount || donationAmount <= 0) {
       return res.status(400).json({
         success: false,
         error: 'Invalid donation amount',
@@ -194,7 +194,7 @@ app.post('/api/statistics/increment', (req, res) => {
 
     // Get current statistics
     const currentStats = configManager.getConfig('statistics')
-    
+
     if (!currentStats || !currentStats.statistics) {
       return res.status(500).json({
         success: false,
@@ -205,29 +205,29 @@ app.post('/api/statistics/increment', (req, res) => {
 
     // Create updated statistics
     const updatedStats = JSON.parse(JSON.stringify(currentStats)) // Deep clone
-    
+
     // Apply increments
     if (increments.trees_planted && typeof increments.trees_planted === 'number') {
       updatedStats.statistics.trees_planted.value += increments.trees_planted
     }
-    
+
     if (increments.hectares_restored && typeof increments.hectares_restored === 'number') {
       updatedStats.statistics.hectares_restored.value += increments.hectares_restored
     }
-    
+
     // Update last_updated timestamp
     updatedStats.last_updated = new Date().toISOString()
-    
+
     // Update the configuration (this would typically write to file in a real implementation)
     // For now, we'll just update the in-memory configuration
     configManager.configs.set('statistics', updatedStats)
-    
-    console.log(`Statistics incremented: +${increments.trees_planted} trees, +${increments.hectares_restored} hectares for $${donation_amount} donation`)
-    
+
+    console.log(`Statistics incremented: +${increments.trees_planted} trees, +${increments.hectares_restored} hectares for $${donationAmount} donation`)
+
     res.json({
       success: true,
       data: updatedStats,
-      donation_amount: donation_amount,
+      donationAmount,
       increments_applied: increments,
       timestamp: new Date().toISOString()
     })
@@ -309,7 +309,6 @@ app.post('/api/donations/email-receipt', async (req, res) => {
       emailResult,
       timestamp: new Date().toISOString()
     })
-
   } catch (error) {
     console.error('Error sending donation receipt:', error)
     res.status(500).json({
@@ -327,14 +326,14 @@ app.post('/api/paypal/ipn', express.raw({ type: 'application/x-www-form-urlencod
     // In a real implementation, you would verify the IPN with PayPal
     // For now, we'll just log the notification
     console.log('PayPal IPN received:', req.body.toString())
-    
+
     // Parse the IPN data
     const ipnData = new URLSearchParams(req.body.toString())
     const paymentStatus = ipnData.get('payment_status')
     const txnId = ipnData.get('txn_id')
     const payerEmail = ipnData.get('payer_email')
     const mcGross = parseFloat(ipnData.get('mc_gross'))
-    
+
     if (paymentStatus === 'Completed' && mcGross > 0) {
       // Process successful payment
       const donationData = {
@@ -361,7 +360,7 @@ app.post('/api/paypal/ipn', express.raw({ type: 'application/x-www-form-urlencod
           trees_planted: donationData.trees,
           hectares_restored: Math.floor(donationData.trees / 100) // 100 trees = 1 hectare
         }
-        
+
         // This would typically call the statistics increment endpoint internally
         console.log('IPN: Would increment statistics:', increments)
       } catch (statsError) {
@@ -381,7 +380,7 @@ app.post('/api/paypal/ipn', express.raw({ type: 'application/x-www-form-urlencod
 app.get('/api/images/validate', async (req, res) => {
   try {
     const { url } = req.query
-    
+
     if (!url) {
       return res.status(400).json({
         success: false,
@@ -392,7 +391,9 @@ app.get('/api/images/validate', async (req, res) => {
 
     // Basic URL validation
     try {
-      new URL(url)
+      const validUrl = new URL(url)
+      // URL is valid if we reach here
+      validUrl.toString() // Use the URL to avoid unused variable warning
     } catch {
       return res.status(400).json({
         success: false,
@@ -404,28 +405,28 @@ app.get('/api/images/validate', async (req, res) => {
     // For external URLs, we can only validate the URL format
     // For local images, we could check file existence
     const isExternal = !url.startsWith('/') && !url.startsWith(req.get('host'))
-    
+
     if (isExternal) {
       // External image - just validate URL format
       res.json({
         success: true,
         exists: true, // We assume external URLs exist
         isExternal: true,
-        url: url,
+        url,
         timestamp: new Date().toISOString()
       })
     } else {
       // Local image - check if file exists
       const fs = require('fs').promises
       const imagePath = path.join(__dirname, '../frontend', url.replace(/^\//, ''))
-      
+
       try {
         await fs.access(imagePath)
         res.json({
           success: true,
           exists: true,
           isExternal: false,
-          url: url,
+          url,
           timestamp: new Date().toISOString()
         })
       } catch {
@@ -433,7 +434,7 @@ app.get('/api/images/validate', async (req, res) => {
           success: true,
           exists: false,
           isExternal: false,
-          url: url,
+          url,
           timestamp: new Date().toISOString()
         })
       }
@@ -504,7 +505,7 @@ app.get('/api/content/validate', async (req, res) => {
   try {
     const contentConfig = configManager.getConfig('content')
     const validationResults = await contentManager.validateContent(contentConfig)
-    
+
     res.json({
       success: true,
       data: validationResults,
@@ -524,7 +525,7 @@ app.get('/api/content/statistics', async (req, res) => {
   try {
     const contentConfig = configManager.getConfig('content')
     const statistics = contentManager.getContentStatistics(contentConfig)
-    
+
     res.json({
       success: true,
       data: statistics,
@@ -543,7 +544,7 @@ app.get('/api/content/statistics', async (req, res) => {
 app.post('/api/content/validate', async (req, res) => {
   try {
     const { content } = req.body
-    
+
     if (!content || typeof content !== 'object') {
       return res.status(400).json({
         success: false,
@@ -551,9 +552,9 @@ app.post('/api/content/validate', async (req, res) => {
         timestamp: new Date().toISOString()
       })
     }
-    
+
     const validationResults = await contentManager.validateContent(content)
-    
+
     res.json({
       success: true,
       data: validationResults,
@@ -577,7 +578,7 @@ app.get('*', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, _next) => {
   console.error(err.stack) // eslint-disable-line no-console
-  res.status(500).json({ 
+  res.status(500).json({
     success: false,
     error: 'Something went wrong!',
     timestamp: new Date().toISOString()
@@ -585,23 +586,23 @@ app.use((err, req, res, _next) => {
 })
 
 // Initialize configuration manager and start server
-async function startServer() {
+async function startServer () {
   try {
     await configManager.initialize()
     console.log('Configuration manager initialized successfully')
-    
+
     await emailService.initialize()
     console.log('Email service initialized successfully')
-    
+
     // Set up configuration change listeners for real-time updates
     configManager.on('configChanged', (event) => {
       console.log(`Configuration changed: ${event.filename} at ${event.timestamp}`)
     })
-    
+
     configManager.on('configError', (event) => {
       console.error(`Configuration error for ${event.name}:`, event.error)
     })
-    
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`) // eslint-disable-line no-console
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`) // eslint-disable-line no-console
@@ -620,7 +621,6 @@ process.on('SIGTERM', async () => {
 })
 
 process.on('SIGINT', async () => {
-  
   await configManager.cleanup()
   process.exit(0)
 })

@@ -1,16 +1,15 @@
 const request = require('supertest')
 const express = require('express')
 const path = require('path')
-const fs = require('fs')
 const ConfigManager = require('./config/configManager')
 
 // Create a test server instance
-function createTestServer() {
+function createTestServer () {
   const app = express()
   const configManager = new ConfigManager(path.join(__dirname, '../config'))
-  
+
   app.use(express.json())
-  
+
   // Configuration API endpoints
   app.get('/api/config', (req, res) => {
     try {
@@ -33,7 +32,7 @@ function createTestServer() {
     try {
       const { name } = req.params
       const config = configManager.getConfig(name)
-      
+
       if (!config || Object.keys(config).length === 0) {
         return res.status(404).json({
           success: false,
@@ -41,7 +40,7 @@ function createTestServer() {
           timestamp: new Date().toISOString()
         })
       }
-      
+
       res.json({
         success: true,
         data: config,
@@ -154,12 +153,12 @@ describe('Configuration API Integration Tests', () => {
 
       const data = response.body.data
       const stats = data.statistics
-      
+
       expect(stats.trees_planted.value).toBeDefined()
       expect(stats.trees_planted.label).toBeDefined()
       expect(stats.trees_planted.icon).toBeDefined()
       expect(stats.trees_planted.format).toBeDefined()
-      
+
       expect(typeof stats.trees_planted.value).toBe('number')
       expect(typeof stats.trees_planted.label).toBe('string')
       expect(typeof data.update_frequency).toBe('number')
@@ -174,7 +173,7 @@ describe('Configuration API Integration Tests', () => {
       expect(content.site).toBeDefined()
       expect(content.tabs).toBeDefined()
       expect(content.paypal).toBeDefined()
-      
+
       expect(content.paypal.business_id).toBe('73PLJSAMMTSCW')
       expect(Array.isArray(content.paypal.amounts)).toBe(true)
     })

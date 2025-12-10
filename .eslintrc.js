@@ -10,6 +10,11 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
+  globals: {
+    ImageOptimizer: 'readonly',
+    StatisticsEngine: 'readonly',
+    gtag: 'readonly'
+  },
   rules: {
     // Customize rules as needed
     'no-console': 'warn',

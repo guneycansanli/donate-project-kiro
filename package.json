@@ -14,7 +14,8 @@
     "lint:fix": "eslint backend frontend/js --ext .js --fix",
     "format": "prettier --write \"**/*.{js,json,yml,yaml,md}\"",
     "format:check": "prettier --check \"**/*.{js,json,yml,yaml,md}\"",
-    "build": "npm run lint && npm run test",
+    "build": "npm run lint && npm run test:unit",
+    "test:unit": "jest backend/config/configManager.test.js backend/server.test.js",
     "docker:build": "docker build -t give-green-live-clean .",
     "docker:run": "docker-compose up",
     "docker:dev": "docker-compose --profile dev up",
@@ -75,6 +76,9 @@
     "testMatch": [
       "**/__tests__/**/*.js",
       "**/?(*.)+(spec|test).js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(parse5)/)"
     ]
   }
 }

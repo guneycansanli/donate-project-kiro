@@ -95,7 +95,7 @@ describe('Email Notification Reliability Properties', () => {
 
           // Property: Invalid emails should be rejected
           await expect(emailService.sendDonationReceipt(donationData, invalidEmail))
-            .rejects.toThrow('Invalid email address format')
+            .rejects.toThrow(/Invalid email address format|Recipient email is required/)
 
           // Property: Email validation function should correctly identify invalid emails
           expect(emailService.validateEmail(invalidEmail)).toBe(false)

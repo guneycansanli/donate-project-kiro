@@ -9,7 +9,7 @@ const { EventEmitter } = require('events')
  * Handles loading, validation, and watching of YAML configuration files
  */
 class ConfigManager extends EventEmitter {
-  constructor(configDir = path.join(__dirname, '../../config')) {
+  constructor (configDir = path.join(__dirname, '../../config')) {
     super()
     this.configDir = configDir
     this.configs = new Map()
@@ -22,17 +22,17 @@ class ConfigManager extends EventEmitter {
    * Initialize the configuration manager
    * Load all configuration files and set up watchers
    */
-  async initialize() {
+  async initialize () {
     try {
       // Ensure config directory exists
       await this.ensureConfigDirectory()
-      
+
       // Load all configuration files
       await this.loadAllConfigs()
-      
+
       // Set up file watchers
       this.setupWatchers()
-      
+
       console.log('Configuration manager initialized successfully')
     } catch (error) {
       console.error('Failed to initialize configuration manager:', error)
@@ -43,9 +43,9 @@ class ConfigManager extends EventEmitter {
   /**
    * Load all configuration files
    */
-  async loadAllConfigs() {
+  async loadAllConfigs () {
     const configFiles = ['statistics.yml', 'content.yml', 'settings.yml']
-    
+
     for (const filename of configFiles) {
       await this.loadConfig(filename)
     }
@@ -55,35 +55,34 @@ class ConfigManager extends EventEmitter {
    * Load a specific configuration file
    * @param {string} filename - Name of the configuration file
    */
-  async loadConfig(filename) {
+  async loadConfig (filename) {
     const configName = path.basename(filename, '.yml')
     const filePath = path.join(this.configDir, filename)
-    
+
     try {
       // Check if file exists, create from template if not
       if (!fs.existsSync(filePath)) {
         await this.createTemplateFile(filename)
       }
-      
+
       // Read and parse YAML file
       const fileContent = fs.readFileSync(filePath, 'utf8')
       const config = yaml.load(fileContent)
-      
+
       // Validate configuration
       const validatedConfig = this.validateConfig(configName, config)
-      
+
       // Store configuration
       this.configs.set(configName, validatedConfig)
-      
+
       console.log(`Loaded configuration: ${configName}`)
       this.emit('configLoaded', { name: configName, config: validatedConfig })
-      
     } catch (error) {
       console.error(`Failed to load config ${filename}:`, error)
-      
+
       // Always emit error event
       this.emit('configError', { name: configName, error, usingDefault: false })
-      
+
       // Use default configuration on error
       const defaultConfig = this.defaultConfigs[configName]
       if (defaultConfig) {
@@ -101,7 +100,7 @@ class ConfigManager extends EventEmitter {
    * @param {string} name - Configuration name
    * @returns {Object} Configuration object
    */
-  getConfig(name) {
+  getConfig (name) {
     return this.configs.get(name) || this.defaultConfigs[name] || {}
   }
 
@@ -109,7 +108,7 @@ class ConfigManager extends EventEmitter {
    * Get all configurations
    * @returns {Object} All configurations
    */
-  getAllConfigs() {
+  getAllConfigs () {
     const allConfigs = {}
     for (const [name, config] of this.configs) {
       allConfigs[name] = config
@@ -123,7 +122,7 @@ class ConfigManager extends EventEmitter {
    * @param {Object} config - Configuration object to validate
    * @returns {Object} Validated configuration with defaults applied
    */
-  validateConfig(configName, config) {
+  validateConfig (configName, config) {
     const schema = this.validationSchemas[configName]
     if (!schema) {
       return config
@@ -131,10 +130,10 @@ class ConfigManager extends EventEmitter {
 
     // Apply defaults and validate
     const validatedConfig = this.applyDefaults(config, this.defaultConfigs[configName])
-    
+
     // Perform type validation
     this.performTypeValidation(configName, validatedConfig, schema)
-    
+
     return validatedConfig
   }
 
@@ -144,11 +143,11 @@ class ConfigManager extends EventEmitter {
    * @param {Object} defaults - Default values
    * @returns {Object} Configuration with defaults applied
    */
-  applyDefaults(config, defaults) {
+  applyDefaults (config, defaults) {
     if (!defaults) return config
-    
+
     const result = { ...defaults }
-    
+
     for (const [key, value] of Object.entries(config || {})) {
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         result[key] = this.applyDefaults(value, defaults[key])
@@ -156,7 +155,7 @@ class ConfigManager extends EventEmitter {
         result[key] = value
       }
     }
-    
+
     return result
   }
 
@@ -166,11 +165,11 @@ class ConfigManager extends EventEmitter {
    * @param {Object} config - Configuration to validate
    * @param {Object} schema - Validation schema
    */
-  performTypeValidation(configName, config, schema) {
+  performTypeValidation (configName, config, schema) {
     for (const [keyPath, expectedType] of Object.entries(schema)) {
       const keys = keyPath.split('.')
       let current = config
-      
+
       // Navigate to the nested property
       for (let i = 0; i < keys.length - 1; i++) {
         if (current[keys[i]] === undefined || current[keys[i]] === null) {
@@ -178,13 +177,13 @@ class ConfigManager extends EventEmitter {
         }
         current = current[keys[i]]
       }
-      
+
       const finalKey = keys[keys.length - 1]
       if (current && current[finalKey] !== undefined && current[finalKey] !== null) {
         const actualType = typeof current[finalKey]
         if (actualType !== expectedType && expectedType !== 'any') {
           console.warn(`Configuration ${configName}.${keyPath}: expected ${expectedType}, got ${actualType}`)
-          
+
           // Attempt type coercion
           try {
             if (expectedType === 'number') {
@@ -236,16 +235,16 @@ class ConfigManager extends EventEmitter {
   /**
    * Set up file watchers for configuration files
    */
-  setupWatchers() {
+  setupWatchers () {
     const configFiles = ['statistics.yml', 'content.yml', 'settings.yml']
-    
+
     for (const filename of configFiles) {
       const filePath = path.join(this.configDir, filename)
       const watcher = chokidar.watch(filePath, {
         persistent: true,
         ignoreInitial: true
       })
-      
+
       watcher.on('change', async () => {
         console.log(`Configuration file changed: ${filename}`)
         try {
@@ -256,7 +255,7 @@ class ConfigManager extends EventEmitter {
           this.emit('configError', { filename, error })
         }
       })
-      
+
       this.watchers.set(filename, watcher)
     }
   }
@@ -265,17 +264,17 @@ class ConfigManager extends EventEmitter {
    * Create template configuration file
    * @param {string} filename - Name of the configuration file
    */
-  async createTemplateFile(filename) {
+  async createTemplateFile (filename) {
     const configName = path.basename(filename, '.yml')
     const defaultConfig = this.defaultConfigs[configName]
-    
+
     if (!defaultConfig) {
       throw new Error(`No default configuration available for ${configName}`)
     }
-    
+
     const filePath = path.join(this.configDir, filename)
     const yamlContent = yaml.dump(defaultConfig, { indent: 2 })
-    
+
     fs.writeFileSync(filePath, yamlContent, 'utf8')
     console.log(`Created template configuration file: ${filename}`)
   }
@@ -283,7 +282,7 @@ class ConfigManager extends EventEmitter {
   /**
    * Ensure configuration directory exists
    */
-  async ensureConfigDirectory() {
+  async ensureConfigDirectory () {
     if (!fs.existsSync(this.configDir)) {
       fs.mkdirSync(this.configDir, { recursive: true })
       console.log(`Created configuration directory: ${this.configDir}`)
@@ -294,7 +293,7 @@ class ConfigManager extends EventEmitter {
    * Get default configurations
    * @returns {Object} Default configurations
    */
-  getDefaultConfigs() {
+  getDefaultConfigs () {
     return {
       statistics: {
         statistics: {
@@ -368,7 +367,7 @@ class ConfigManager extends EventEmitter {
    * Get validation schemas for configurations
    * @returns {Object} Validation schemas
    */
-  getValidationSchemas() {
+  getValidationSchemas () {
     return {
       statistics: {
         'statistics.trees_planted.value': 'number',
@@ -380,8 +379,8 @@ class ConfigManager extends EventEmitter {
         'statistics.global_impact.value': 'string',
         'statistics.global_impact.label': 'string',
         'statistics.global_impact.format': 'string',
-        'update_frequency': 'number',
-        'last_updated': 'string'
+        update_frequency: 'number',
+        last_updated: 'string'
       },
       content: {
         'site.title': 'string',
@@ -408,13 +407,13 @@ class ConfigManager extends EventEmitter {
    * @param {string} keyPath - Dot-separated path to the value
    * @returns {*} Default value or undefined
    */
-  getDefaultValueForPath(configName, keyPath) {
+  getDefaultValueForPath (configName, keyPath) {
     const defaultConfig = this.defaultConfigs[configName]
     if (!defaultConfig) return undefined
-    
+
     const keys = keyPath.split('.')
     let current = defaultConfig
-    
+
     for (const key of keys) {
       if (current && typeof current === 'object' && current[key] !== undefined) {
         current = current[key]
@@ -422,14 +421,14 @@ class ConfigManager extends EventEmitter {
         return undefined
       }
     }
-    
+
     return current
   }
 
   /**
    * Clean up watchers and resources
    */
-  async cleanup() {
+  async cleanup () {
     for (const [filename, watcher] of this.watchers) {
       await watcher.close()
       console.log(`Closed watcher for ${filename}`)

@@ -6,7 +6,7 @@ const path = require('path')
  * Handles content validation, length management, and image processing
  */
 class ContentManager {
-  constructor(configManager) {
+  constructor (configManager) {
     this.configManager = configManager
     this.maxContentLengths = {
       title: 100,
@@ -25,7 +25,7 @@ class ContentManager {
    * @param {Object} content - Content configuration object
    * @returns {Object} Processed content with validation results
    */
-  async validateContent(content) {
+  async validateContent (content) {
     const validationResults = {
       valid: true,
       warnings: [],
@@ -56,7 +56,6 @@ class ContentManager {
 
       // Apply content length management
       this.applyContentLengthManagement(validationResults.processedContent, validationResults)
-
     } catch (error) {
       validationResults.valid = false
       validationResults.errors.push(`Content validation failed: ${error.message}`)
@@ -70,7 +69,7 @@ class ContentManager {
    * @param {Object} site - Site content object
    * @param {Object} validationResults - Validation results object
    */
-  async validateSiteContent(site, validationResults) {
+  async validateSiteContent (site, validationResults) {
     const { processedContent } = validationResults
 
     // Validate title
@@ -114,7 +113,7 @@ class ContentManager {
    * @param {Object} tabs - Tab content object
    * @param {Object} validationResults - Validation results object
    */
-  async validateTabContent(tabs, validationResults) {
+  async validateTabContent (tabs, validationResults) {
     const { processedContent } = validationResults
     const requiredTabs = ['home', 'about', 'impact', 'donate']
 
@@ -129,7 +128,7 @@ class ContentManager {
         }
       } else {
         const tab = tabs[tabName]
-        
+
         // Validate tab structure
         if (typeof tab !== 'object') {
           validationResults.errors.push(`Tab ${tabName} must be an object`)
@@ -166,7 +165,7 @@ class ContentManager {
    * @param {Object} paypal - PayPal configuration object
    * @param {Object} validationResults - Validation results object
    */
-  async validatePayPalContent(paypal, validationResults) {
+  async validatePayPalContent (paypal, validationResults) {
     const { processedContent } = validationResults
 
     processedContent.paypal = processedContent.paypal || {}
@@ -192,15 +191,15 @@ class ContentManager {
       validationResults.warnings.push('PayPal amounts missing or invalid - using defaults')
       processedContent.paypal.amounts = [10, 25, 50, 100, 250]
     } else {
-      const validAmounts = paypal.amounts.filter(amount => 
+      const validAmounts = paypal.amounts.filter(amount =>
         typeof amount === 'number' && amount > 0 && amount <= 10000
       )
-      
+
       if (validAmounts.length !== paypal.amounts.length) {
         validationResults.warnings.push('Some PayPal amounts are invalid - filtered out invalid values')
         processedContent.paypal.amounts = validAmounts
       }
-      
+
       if (validAmounts.length === 0) {
         validationResults.warnings.push('No valid PayPal amounts - using defaults')
         processedContent.paypal.amounts = [10, 25, 50, 100, 250]
@@ -213,7 +212,7 @@ class ContentManager {
    * @param {Object} images - Images configuration object
    * @param {Object} validationResults - Validation results object
    */
-  async validateImages(images, validationResults) {
+  async validateImages (images, validationResults) {
     const { processedContent } = validationResults
 
     processedContent.images = processedContent.images || {}
@@ -261,7 +260,7 @@ class ContentManager {
    * @param {Object} content - Content object to process
    * @param {Object} validationResults - Validation results object
    */
-  applyContentLengthManagement(content, validationResults) {
+  applyContentLengthManagement (content, validationResults) {
     // Truncate site content if too long
     if (content.site) {
       if (content.site.title && content.site.title.length > this.maxContentLengths.title) {
@@ -301,11 +300,13 @@ class ContentManager {
    * @param {string} url - Image URL to validate
    * @returns {boolean} True if URL appears valid
    */
-  async validateImageUrl(url) {
+  async validateImageUrl (url) {
     try {
       // Basic URL validation
-      new URL(url)
-      
+      const validUrl = new URL(url)
+      // URL is valid if we reach here
+      validUrl.toString() // Use the URL to avoid unused variable warning
+
       // Check file extension
       const extension = path.extname(url).toLowerCase().replace('.', '')
       if (extension && !this.supportedImageFormats.includes(extension)) {
@@ -334,7 +335,7 @@ class ContentManager {
    * @param {string} str - String to check
    * @returns {boolean} True if contains HTML
    */
-  containsHTML(str) {
+  containsHTML (str) {
     return /<[^>]*>/g.test(str)
   }
 
@@ -343,7 +344,7 @@ class ContentManager {
    * @param {string} str - String to process
    * @returns {string} String with HTML tags removed
    */
-  stripHTML(str) {
+  stripHTML (str) {
     return str.replace(/<[^>]*>/g, '')
   }
 
@@ -353,7 +354,7 @@ class ContentManager {
    * @param {number} maxLength - Maximum length
    * @returns {string} Truncated string
    */
-  truncateWithEllipsis(str, maxLength) {
+  truncateWithEllipsis (str, maxLength) {
     if (str.length <= maxLength) return str
     return str.substring(0, maxLength - 3) + '...'
   }
@@ -363,7 +364,7 @@ class ContentManager {
    * @param {string} str - String to capitalize
    * @returns {string} Capitalized string
    */
-  capitalizeFirst(str) {
+  capitalizeFirst (str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
@@ -372,7 +373,7 @@ class ContentManager {
    * @param {Object} content - Content configuration
    * @returns {Object} Content statistics
    */
-  getContentStatistics(content) {
+  getContentStatistics (content) {
     const stats = {
       totalCharacters: 0,
       totalWords: 0,
@@ -386,7 +387,7 @@ class ContentManager {
       const siteText = [content.site.title, content.site.tagline, content.site.description]
         .filter(Boolean)
         .join(' ')
-      
+
       stats.totalCharacters += siteText.length
       stats.totalWords += this.countWords(siteText)
       stats.contentByType.site = {
@@ -397,12 +398,12 @@ class ContentManager {
 
     if (content.tabs) {
       stats.tabCount = Object.keys(content.tabs).length
-      
+
       for (const [tabName, tab] of Object.entries(content.tabs)) {
         const tabText = [tab.title, tab.content].filter(Boolean).join(' ')
         stats.totalCharacters += tabText.length
         stats.totalWords += this.countWords(tabText)
-        
+
         stats.contentByType[`tab_${tabName}`] = {
           characters: tabText.length,
           words: this.countWords(tabText)
@@ -422,7 +423,7 @@ class ContentManager {
    * @param {string} text - Text to count words in
    * @returns {number} Word count
    */
-  countWords(text) {
+  countWords (text) {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length
   }
 }

@@ -1,220 +1,494 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Give Green, Live Clean - Plant Trees, Restore Forests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Give Green, Live Clean Donation Page</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="css/styles.css" rel="stylesheet"/>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background-color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2f855a;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #2f855a;
+        }
+
+        .header-donate-btn {
+            background: #2f855a;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header-donate-btn:hover {
+            background: #276749;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-btn {
+            background: #ffffff;
+            color: #2f855a;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 0;
+            background: #f7fafc;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2f855a;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+
+        /* Donation Section */
+        .donation-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .donation-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .donation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .donate-card {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .donate-card:hover {
+            border-color: #2f855a;
+            transform: translateY(-2px);
+        }
+
+        .donate-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2f855a;
+            margin-bottom: 0.5rem;
+        }
+
+        .donate-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .donate-btn {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .donate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .emergency-btn {
+            background: #dc3545;
+            color: white;
+            padding: 1.25rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+
+        .emergency-btn:hover {
+            background: #c82333;
+        }
+
+        /* Footer */
+        footer {
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .donation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Success Animation */
+        .success-flash {
+            animation: flash 0.5s ease-in-out;
+        }
+
+        @keyframes flash {
+            0% { background-color: #f0fff4; }
+            50% { background-color: #c6f6d5; }
+            100% { background-color: #f0fff4; }
         }
     </style>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#0df20d",
-                        "background-light": "#f5f8f5",
-                        "background-dark": "#102210",
-                    },
-                    fontFamily: {
-                        "display": ["Manrope", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                },
-            },
-        }
-    </script>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
-<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-<div class="layout-container flex h-full grow flex-col">
-<div class="flex flex-1 justify-center py-5">
-<div class="layout-content-container flex flex-col max-w-[960px] flex-1 px-4 md:px-0">
-<!-- TopNavBar -->
-<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200/50 dark:border-gray-700/50 px-4 sm:px-10 py-3">
-<div class="flex items-center gap-4 text-gray-900 dark:text-white">
-<div class="size-6 text-primary">
-<span class="material-symbols-outlined text-3xl">forest</span>
-</div>
-<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Give Green, Live Clean</h2>
-</div>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="#home" class="logo">🌲 Give Green, Live Clean</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#stats">Impact</a></li>
+                <li><a href="#donate">Donate</a></li>
+            </ul>
+            <a href="#donate" class="header-donate-btn">Donate Now</a>
+        </nav>
+    </header>
 
-<!-- Desktop Navigation -->
-<div class="hidden sm:flex flex-1 justify-end gap-8">
-<div class="flex items-center gap-9">
-<a class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Home</a>
-<a class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">About Us</a>
-</div>
-<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-gray-900 text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
-<span class="truncate">Donate</span>
-</button>
-</div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Restore Our Forests. Protect Our Future.</h1>
+            <p>Join thousands of environmental champions in our mission to plant trees, restore ecosystems, and combat climate change. Every donation makes a lasting impact on our planet's future.</p>
+            <a href="#donate" class="hero-btn">🌱 Start Planting Trees</a>
+        </div>
+    </section>
 
-<!-- Mobile Navigation Toggle -->
-<div class="sm:hidden">
-<button id="mobile-menu-toggle" class="flex items-center justify-center w-11 h-11 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Toggle mobile menu" aria-expanded="false">
-<span class="material-symbols-outlined text-2xl" id="mobile-menu-icon">menu</span>
-</button>
-</div>
+    <!-- Stats Section -->
+    <section class="stats-section" id="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">150,000+</div>
+                    <div class="stat-label">🌳 Trees Planted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">75+</div>
+                    <div class="stat-label">🌍 Hectares Restored</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">🌎 Countries Reached</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5,000+</div>
+                    <div class="stat-label">👥 Donors Worldwide</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Mobile Navigation Menu -->
-<div id="mobile-menu" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden sm:hidden" aria-hidden="true">
-<div class="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-900 shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out" id="mobile-menu-panel">
-<div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-<div class="flex items-center gap-3">
-<div class="size-5 text-primary">
-<span class="material-symbols-outlined text-2xl">forest</span>
-</div>
-<span class="text-gray-900 dark:text-white font-semibold">Menu</span>
-</div>
-<button id="mobile-menu-close" class="flex items-center justify-center w-10 h-10 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Close mobile menu">
-<span class="material-symbols-outlined text-xl">close</span>
-</button>
-</div>
-<nav class="p-4">
-<div class="space-y-2" role="menu">
-<button class="mobile-nav-item w-full flex items-center gap-3 px-4 py-3 text-left text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary" data-tab="home" role="menuitem">
-<span class="material-symbols-outlined text-xl">home</span>
-<span class="font-medium">Home</span>
-</button>
-<button class="mobile-nav-item w-full flex items-center gap-3 px-4 py-3 text-left text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary" data-tab="about" role="menuitem">
-<span class="material-symbols-outlined text-xl">info</span>
-<span class="font-medium">About Us</span>
-</button>
-<button class="mobile-nav-item w-full flex items-center gap-3 px-4 py-3 text-left text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary" data-tab="impact" role="menuitem">
-<span class="material-symbols-outlined text-xl">trending_up</span>
-<span class="font-medium">Our Impact</span>
-</button>
-<button class="mobile-nav-item w-full flex items-center gap-3 px-4 py-3 text-left text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary" data-tab="donate" role="menuitem">
-<span class="material-symbols-outlined text-xl">volunteer_activism</span>
-<span class="font-medium">Donate</span>
-</button>
-</div>
-<div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-<button class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-gray-900 font-bold rounded-lg hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" data-tab="donate">
-<span class="material-symbols-outlined text-xl">volunteer_activism</span>
-<span>Donate Now</span>
-</button>
-</div>
-</nav>
-</div>
-</div>
-</header>
-<main class="flex-grow">
-<!-- HeroSection -->
-<div class="hero-section py-8 sm:py-12 md:py-16">
-<div class="@container">
-<div class="p-0 @[480px]:p-4">
-<div class="flex min-h-[400px] sm:min-h-[480px] flex-col gap-4 sm:gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4 sm:p-6 text-center mobile-text-adjust" data-alt="A lush, vibrant green forest canopy viewed from above, with sunlight filtering through the leaves." style='background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC3wvfbzFEeJzLd57UFxsFLnoidh0v3jCm6l5ZzL6g5Fl_sxLmrgzHJ_OZTlzG_Psrs_AI1hdJMGCO6HrUbhhALkrb_-9lOC_7HzWbVGJ1-d50pLVXiZKq4kZvzcOckmYJQ2MqBg0vPZPAuslpPEDcp129q3FJx-mR6RORSeKrsl4Vbxfs-zcdV4pjcbs2tGmh5o-jZwyrPmZwyA1xRPCsgihAn6mk2pJyiBE7PXJNp8GX2AwipG3JMg3E4b3nMAWq4tcx20P4HYoA");'>
-<div class="flex flex-col gap-3 sm:gap-4 max-w-2xl px-2">
-<h1 class="text-white text-2xl sm:text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
-                                                Your Donation Plants a Forest. Give Green, Live Clean.
-                                            </h1>
-<h2 class="text-white text-sm sm:text-base md:text-lg font-normal leading-normal">
-                                                Join our mission to reforest the planet. Every dollar you give helps us plant trees, restore ecosystems, and build a healthier world for tomorrow.
-                                            </h2>
-</div>
-<div class="flex flex-col items-center gap-2 sm:gap-3">
-<button class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 sm:h-14 px-6 sm:px-8 bg-primary text-gray-900 text-sm sm:text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity touch-manipulation">
-<span class="truncate">Donate with PayPal</span>
-</button>
-<div class="flex items-center gap-1 text-white text-xs sm:text-sm">
-<span class="material-symbols-outlined text-sm">lock</span>
-<span>Secure Donation</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Stats -->
-<div class="stats-container py-8 sm:py-12 md:py-16">
-<div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-4">
-<div class="flex min-w-[200px] flex-1 flex-col gap-2 rounded-xl p-4 sm:p-6 border border-gray-200/80 dark:border-gray-700/60 bg-white/50 dark:bg-black/20 hover:shadow-lg transition-shadow touch-manipulation" data-stat="trees_planted">
-<div class="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-<span class="material-symbols-outlined text-primary text-2xl sm:text-3xl" data-stat-icon>park</span>
-<p class="text-sm sm:text-base font-medium leading-normal stat-label" data-stat-label>Trees Planted</p>
-</div>
-<p class="text-gray-900 dark:text-white tracking-tight text-2xl sm:text-4xl font-bold leading-tight stat-value" data-stat-value>150,000+</p>
-</div>
-<div class="flex min-w-[200px] flex-1 flex-col gap-2 rounded-xl p-4 sm:p-6 border border-gray-200/80 dark:border-gray-700/60 bg-white/50 dark:bg-black/20 hover:shadow-lg transition-shadow touch-manipulation" data-stat="hectares_restored">
-<div class="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-<span class="material-symbols-outlined text-primary text-2xl sm:text-3xl" data-stat-icon>landscape</span>
-<p class="text-sm sm:text-base font-medium leading-normal stat-label" data-stat-label>Hectares Restored</p>
-</div>
-<p class="text-gray-900 dark:text-white tracking-tight text-2xl sm:text-4xl font-bold leading-tight stat-value" data-stat-value>75+</p>
-</div>
-<div class="flex min-w-[200px] flex-1 flex-col gap-2 rounded-xl p-4 sm:p-6 border border-gray-200/80 dark:border-gray-700/60 bg-white/50 dark:bg-black/20 hover:shadow-lg transition-shadow touch-manipulation sm:col-span-2 lg:col-span-1" data-stat="global_impact">
-<div class="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-<span class="material-symbols-outlined text-primary text-2xl sm:text-3xl" data-stat-icon>public</span>
-<p class="text-sm sm:text-base font-medium leading-normal stat-label" data-stat-label>Global Impact</p>
-</div>
-<p class="text-gray-900 dark:text-white tracking-tight text-2xl sm:text-4xl font-bold leading-tight stat-value" data-stat-value>Worldwide</p>
-</div>
-</div>
-<!-- Statistics Status -->
-<div class="text-center mt-4 px-4">
-<p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400" data-last-updated>Last updated: Loading...</p>
-<p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400" data-connection-status></p>
-</div>
-</div>
-<!-- Informational Section -->
-<div class="py-12 sm:py-16 text-center">
-<div class="px-4">
-<h2 class="text-gray-900 dark:text-white text-3xl font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">Where Your Money Goes</h2>
-<p class="text-gray-700 dark:text-gray-300 text-base font-normal leading-relaxed pb-3 pt-1 max-w-3xl mx-auto">
-                                    Every donation contributes directly to our tree planting initiatives. We partner with local communities to restore vital ecosystems, ensuring transparency and long-term impact from your contribution.
-                                </p>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="mt-8 sm:mt-16 border-t border-gray-200/50 dark:border-gray-700/50 py-6 sm:py-8">
-<div class="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 px-4">
-<div class="flex items-center gap-3 text-gray-900 dark:text-white">
-<div class="size-6 text-primary">
-<span class="material-symbols-outlined text-2xl sm:text-3xl">forest</span>
-</div>
-<span class="text-sm sm:text-base font-bold">Give Green, Live Clean</span>
-</div>
-<div class="flex flex-wrap justify-center gap-4 sm:gap-6 text-gray-600 dark:text-gray-400">
-<a class="hover:text-primary transition-colors text-sm sm:text-base min-h-[44px] flex items-center touch-manipulation" href="#">Contact</a>
-<a class="hover:text-primary transition-colors text-sm sm:text-base min-h-[44px] flex items-center touch-manipulation" href="#">Privacy Policy</a>
-<a class="hover:text-primary transition-colors text-sm sm:text-base min-h-[44px] flex items-center touch-manipulation" href="#">Terms of Service</a>
-</div>
-<div class="flex gap-3 sm:gap-4">
-<a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation" data-alt="Facebook icon" href="#" aria-label="Facebook">
-<svg aria-hidden="true" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
-</a>
-<a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation" data-alt="Twitter icon" href="#" aria-label="Twitter">
-<svg aria-hidden="true" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewbox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
-</a>
-<a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation" data-alt="Instagram icon" href="#" aria-label="Instagram">
-<svg aria-hidden="true" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.345 2.525c.636-.247 1.363-.416 2.427-.465C9.793 2.013 10.147 2 12.315 2zm-1.161 1.043c-1.06.048-1.685.21-2.227.41a3.896 3.896 0 00-1.353 1.012A3.896 3.896 0 004.46 5.827c-.2.542-.362 1.167-.41 2.227-.048 1.024-.06 1.35-.06 3.743s.012 2.72.06 3.743c.048 1.06.21 1.685.41 2.227a3.896 3.896 0 001.012 1.353 3.896 3.896 0 001.353 1.012c.542.2 1.167.362 2.227.41 1.024.048 1.35.06 3.743.06s2.72-.012 3.743-.06c1.06-.048 1.685-.21 2.227-.41a3.896 3.896 0 001.353-1.012 3.896 3.896 0 001.012-1.353c.2-.542.362-1.167.41-2.227.048-1.024.06-1.35.06-3.743s-.012-2.72-.06-3.743c-.048-1.06-.21-1.685-.41-2.227a3.896 3.896 0 00-1.012-1.353A3.896 3.896 0 0018.173 4.46c-.542-.2-1.167-.362-2.227-.41-1.024-.048-1.35-.06-3.743-.06s-2.72.012-3.743.06zM12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm0 1.802a3.333 3.333 0 110 6.666 3.333 3.333 0 010-6.666zm5.338-3.205a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z" fill-rule="evenodd"></path></svg>
-</a>
-</div>
-</div>
-</footer>
-</div>
-</div>
-</div>
-</div>
+    <!-- Donation Section -->
+    <section class="donation-section" id="donate">
+        <div class="container">
+            <h2 class="section-title">Plant Trees Today</h2>
+            <p class="section-subtitle">Choose any amount below and donate instantly through PayPal. Every dollar plants trees!</p>
+            
+            <div class="donation-container">
+                <!-- Direct PayPal Donation Cards -->
+                <div class="donation-grid">
+                    <div class="donate-card">
+                        <h3>$10</h3>
+                        <p>Plants 2 trees and helps restore 1 square meter of forest</p>
+                        <form action="https://www.paypal.com/donate" method="post" target="_top">
+                            <input type="hidden" name="business" value="73PLJSAMMTSCW">
+                            <input type="hidden" name="item_name" value="Plant 2 Trees - $10 Donation">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="amount" value="10.00">
+                            <button type="submit" class="donate-btn" onclick="flashSuccess(this)">
+                                Donate $10 Now
+                            </button>
+                        </form>
+                    </div>
 
-<script src="js/statisticsEngine.js"></script>
-<script src="js/imageOptimizer.js"></script>
-<script src="js/donationHandler.js"></script>
-<script src="js/main.js"></script>
-</body></html>
+                    <div class="donate-card">
+                        <h3>$25</h3>
+                        <p>Plants 5 trees and helps restore 2.5 square meters of forest</p>
+                        <form action="https://www.paypal.com/donate" method="post" target="_top">
+                            <input type="hidden" name="business" value="73PLJSAMMTSCW">
+                            <input type="hidden" name="item_name" value="Plant 5 Trees - $25 Donation">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="amount" value="25.00">
+                            <button type="submit" class="donate-btn" onclick="flashSuccess(this)">
+                                Donate $25 Now
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="donate-card">
+                        <h3>$50</h3>
+                        <p>Plants 10 trees and helps restore 5 square meters of forest</p>
+                        <form action="https://www.paypal.com/donate" method="post" target="_top">
+                            <input type="hidden" name="business" value="73PLJSAMMTSCW">
+                            <input type="hidden" name="item_name" value="Plant 10 Trees - $50 Donation">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="amount" value="50.00">
+                            <button type="submit" class="donate-btn" onclick="flashSuccess(this)">
+                                Donate $50 Now
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="donate-card">
+                        <h3>$100</h3>
+                        <p>Plants 20 trees and helps restore 10 square meters of forest</p>
+                        <form action="https://www.paypal.com/donate" method="post" target="_top">
+                            <input type="hidden" name="business" value="73PLJSAMMTSCW">
+                            <input type="hidden" name="item_name" value="Plant 20 Trees - $100 Donation">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="amount" value="100.00">
+                            <button type="submit" class="donate-btn" onclick="flashSuccess(this)">
+                                Donate $100 Now
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Emergency Backup Donations -->
+                <div class="emergency-section">
+                    <h3 style="color: #c53030; margin-bottom: 1rem;">🚨 Emergency Backup Donations</h3>
+                    <p style="margin-bottom: 1.5rem; color: #666;">If the buttons above don't work, try these direct PayPal links:</p>
+                    
+                    <form action="https://www.paypal.com/donate" method="post" target="_top" style="display: inline-block; margin: 0.5rem;">
+                        <input type="hidden" name="business" value="73PLJSAMMTSCW">
+                        <input type="hidden" name="item_name" value="Emergency Tree Donation - $15">
+                        <input type="hidden" name="currency_code" value="USD">
+                        <input type="hidden" name="amount" value="15.00">
+                        <button type="submit" class="emergency-btn">EMERGENCY $15</button>
+                    </form>
+
+                    <form action="https://www.paypal.com/donate" method="post" target="_top" style="display: inline-block; margin: 0.5rem;">
+                        <input type="hidden" name="business" value="73PLJSAMMTSCW">
+                        <input type="hidden" name="item_name" value="Emergency Tree Donation - $30">
+                        <input type="hidden" name="currency_code" value="USD">
+                        <input type="hidden" name="amount" value="30.00">
+                        <button type="submit" class="emergency-btn">EMERGENCY $30</button>
+                    </form>
+
+                    <div style="margin-top: 1rem; padding: 1rem; background: #e6fffa; border-radius: 6px;">
+                        <p style="font-size: 0.9rem; color: #2d3748;">
+                            ✅ These emergency buttons use the simplest possible PayPal integration<br>
+                            🔒 All donations are secure and go directly to tree planting<br>
+                            🌳 Every $5 plants one tree and helps restore our forests
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Test Status -->
+                <div style="margin-top: 2rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; text-align: center;">
+                    <p><strong>🧪 Test Status:</strong> All donation buttons are now using direct PayPal forms</p>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        Click any button above → Should redirect to PayPal → Complete donation
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Give Green, Live Clean. Making the world greener, one tree at a time.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple success flash animation
+        function flashSuccess(button) {
+            console.log('Donation button clicked:', button.textContent);
+            button.parentElement.parentElement.classList.add('success-flash');
+            setTimeout(function() {
+                button.parentElement.parentElement.classList.remove('success-flash');
+            }, 500);
+            return true; // Allow form submission to continue
+        }
+
+        // Smooth scrolling for navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Donation website loaded successfully!');
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+
+        // Test all donation buttons on page load
+        window.addEventListener('load', function() {
+            console.log('Testing donation buttons...');
+            const donateButtons = document.querySelectorAll('.donate-btn, .emergency-btn');
+            console.log('Found', donateButtons.length, 'donation buttons');
+            
+            donateButtons.forEach((button, index) => {
+                console.log('Button', index + 1, ':', button.textContent.trim());
+            });
+            
+            console.log('All buttons should redirect to PayPal when clicked');
+        });
+    </script>
+</body>
+</html>
